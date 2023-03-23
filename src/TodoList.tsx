@@ -27,12 +27,13 @@ import { useForm } from "react-hook-form";
 // }
 
 interface IForm {
-    email: string;
-    firstName: string;
-    lastName: string;
-    userName: string;
-    password: string;
-    password1: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  password: string;
+  password1: string;
+  extraError?: string;
 }
 
 function TodoList() {
@@ -40,38 +41,51 @@ function TodoList() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IForm>(
-    {
-        defaultValues: {
-            email: "@naver.com",
-        }
-    }
-  );
+    setError,
+  } = useForm<IForm>({
+    defaultValues: {
+      email: "@naver.com",
+    },
+  });
 
-  const onValid = (data: any) => {
-    console.log("onValid : ", data);
+  const onValid = (data: IForm) => {
+    if (data.password !== data.password1) {
+      setError(
+        "password1",
+        { message: "Password are not the same" },
+        { shouldFocus: true }
+      );
+    }
+    setError("extraError", { message: "Server offline" });
   };
-  const onInValid = (data: any) => {
-    console.log("onInVal : ", errors);
-  };
-//   console.log("onInVal : ", errors);
 
   return (
     <>
       <form
         style={{ display: "flex", flexDirection: "column" }}
-        onSubmit={handleSubmit(onValid, onInValid)}
+        onSubmit={handleSubmit(onValid)}
       >
-        <input {...register("email", { 
+        <input
+          {...register("email", {
             required: "Email is required",
             pattern: {
-                value: /^[A-Za-z0-9._%+-]+@naver.com$/,
-                message: "Only naver.com emails allowed",
+              value: /^[A-Za-z0-9._%+-]+@naver.com$/,
+              message: "Only naver.com emails allowed",
             },
-        })} placeholder="Email" />
+          })}
+          placeholder="Email"
+        />
         <span>{errors?.email?.message}</span>
         <input
-          {...register("firstName", { required: "Write here" })}
+          {...register("firstName", { 
+            required: "Write here",
+            validate: {
+                // 서버 통신 -> 비동기
+                // noNico: async (value) => value.includes("nico") ? "No nico allowed" : true,
+                noNico: (value) => value.includes("nico") ? "No nico allowed" : true,
+                noNick: (value) => value.includes("nick") ? "No nick allowed" : true,
+            }
+         })}
           placeholder="First Name"
         />
         <span>{errors?.firstName?.message}</span>
@@ -104,6 +118,7 @@ function TodoList() {
         />
         <span>{errors?.password1?.message}</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </>
   );
