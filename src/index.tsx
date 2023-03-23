@@ -9,9 +9,11 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <>
     <ThemeProvider theme={theme}>
       <RouterProvider router={Router} />
     </ThemeProvider>
-  </React.StrictMode>
+  </>
+  // </React.StrictMode>
 );
