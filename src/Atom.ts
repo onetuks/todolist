@@ -7,6 +7,6 @@ export interface ITodo {
   }
   
 export const todoState = atom<ITodo[]>({
-  key: "todo",
+  key: "todos",
   default: [],
 });

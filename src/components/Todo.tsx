@@ -1,11 +1,36 @@
 import { ITodo } from "../Atom";
 
-function Todo({ text }: ITodo) {
-    return <li>
-        <span>{text}</span>
-        <button>TODO</button>
-        <button>DOING</button>
-        <button>DONE</button>
-    </li>;
+function Todo({ text, category, id }: ITodo) {
+  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const {
+      currentTarget: { name },
+    } = event;
+    console.log("I want to go ", name);
+  };
+  return (
+    <li>
+      <span>{text}</span>
+      {/* 클릭이벤트에 파라미터 넣어서 전달하는 방법 1 */}
+      {/* {category !== "TODO" && <button onClick={() => onClick("TODO")}>TODO</button>}
+        {category !== "DOING" && <button onClick={() => onClick("DOING")}>DOING</button>}
+        {category !== "DONE" && <button onClick={() => onClick("DONE")}>DONE</button>} */}
+      {/* 클릭이벤트에 파라미터 넣어서 전달하는 방법 2 */}
+      {category !== "TODO" && (
+        <button name="TODO" onClick={onClick}>
+          TODO
+        </button>
+      )}
+      {category !== "DOING" && (
+        <button name="DOING" onClick={onClick}>
+          DOING
+        </button>
+      )}
+      {category !== "DONE" && (
+        <button name="DONE" onClick={onClick}>
+          DONE
+        </button>
+      )}
+    </li>
+  );
 }
 export default Todo;
