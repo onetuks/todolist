@@ -9,10 +9,8 @@ function Todo({ text, category, id }: ITodo) {
     } = event;
     setTodoState((oldTodos) => {
         const targetIdx = oldTodos.findIndex((todo) => todo.id === id);
-        const oldTodo = oldTodos[targetIdx];
-        const newTodo = { text, id, category: name };
-        console.log("oldTodo: ", oldTodo, "\nnewTodo: ", newTodo);
-        return oldTodos;
+        const newTodo = { text, id, category: name as any };
+        return [...oldTodos.slice(0, targetIdx), newTodo, ...oldTodos.slice(targetIdx+1)];
     })
   };
   return (
