@@ -1,5 +1,5 @@
 import { RecoilRoot } from "recoil";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import TodoList from "./components/TodoList";
 
 const GlobalStyle = createGlobalStyle`
