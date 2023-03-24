@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil";
-import { ITodo, todoState } from "../Atom";
+import { Categories, ITodo, todoState } from "../Atom";
 
 function Todo({ text, category, id }: ITodo) {
     const setTodoState = useSetRecoilState(todoState);
@@ -21,18 +21,18 @@ function Todo({ text, category, id }: ITodo) {
         {category !== "DOING" && <button onClick={() => onClick("DOING")}>DOING</button>}
         {category !== "DONE" && <button onClick={() => onClick("DONE")}>DONE</button>} */}
       {/* 클릭이벤트에 파라미터 넣어서 전달하는 방법 2 */}
-      {category !== "TODO" && (
-        <button name="TODO" onClick={onClick}>
+      {category !== Categories.TODO && (
+        <button name={Categories.TODO} onClick={onClick}>
           TODO
         </button>
       )}
-      {category !== "DOING" && (
-        <button name="DOING" onClick={onClick}>
+      {category !== Categories.DOING && (
+        <button name={Categories.DOING} onClick={onClick}>
           DOING
         </button>
       )}
-      {category !== "DONE" && (
-        <button name="DONE" onClick={onClick}>
+      {category !== Categories.DONE && (
+        <button name={Categories.DONE} onClick={onClick}>
           DONE
         </button>
       )}
