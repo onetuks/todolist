@@ -42,6 +42,7 @@ function TodoList() {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
@@ -56,7 +57,8 @@ function TodoList() {
         { shouldFocus: true }
       );
     }
-    setError("extraError", { message: "Server offline" });
+    // setError("extraError", { message: "Server offline" });
+    setValue("password1", "");
   };
 
   return (
