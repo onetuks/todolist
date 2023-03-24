@@ -1,50 +1,20 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { atom, useRecoilState } from "recoil";
-
-interface IForm {
-  todo: string;
-}
-
-const todoAtom = atom<ITodo[]>({
-  key: "todo",
-  default: [],
-});
-
-interface ITodo {
-  text: string;
-  id: number;
-  category: "TODO" | "DOING" | "DONE";
-}
+import { useRecoilValue } from "recoil";
+import { todoState } from "../Atom";
+import CreateTodo from "./CreateTodo";
+import Todo from "./Todo";
 
 function TodoList() {
-  const [todos, setTodos] = useRecoilState(todoAtom);
-  const { register, handleSubmit, setValue } = useForm<IForm>();
-  const handelValid = ({ todo }: IForm) => {
-    setTodos((oldTodos) => [
-      { text: todo, id: Date.now(), category: "TODO" },
-      ...oldTodos,
-    ]);
-    setValue("todo", "");
-  };
+  const todos = useRecoilValue(todoState);
 
   return (
     <>
       <h1>To do</h1>
       <hr />
-      <form onSubmit={handleSubmit(handelValid)}>
-        <input {
-          ...register("todo", {
-            required: "Please write a Todo.",
-          })
-        }
-        placeholder="Write a Todo."
-        />
-        <button>Add</button>
-      </form>
+      <CreateTodo />
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.text}</li>
+          // {...todo} 보내주는 곳과 사용하는 곳에서 todo에 대한 interface가 같으므로 이렇게 내부 원소를 보내줘도 됨.
+          <Todo key={todo.id} {...todo} />
         ))}
       </ul>
     </>
