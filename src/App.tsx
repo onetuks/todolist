@@ -37,8 +37,15 @@ const Card = styled.div`
 function App() {
   const [todos, setTodos] = useRecoilState(todoState);
   
-  const onDragEnd = ({destination, source}: DropResult) => {
-    
+  const onDragEnd = ({draggableId, destination, source}: DropResult) => {
+    setTodos((oldTodos) => {
+      // React랑 웹은 Immutable을 지향함. 
+      // 원본을 변형시켜선 안 됨. 
+      const todosCopy = [...oldTodos];
+      todosCopy.splice(source.index, 1);
+      todosCopy.splice(destination!.index, 0, draggableId);
+      return todosCopy;
+    })
   };
 
   return (
@@ -49,7 +56,7 @@ function App() {
             {(magic) => (
               <Board ref={magic.innerRef} {...magic.droppableProps}>
                 {todos.map((todo, index) => (
-                  <Draggable key={index} draggableId={todo} index={index}>
+                  <Draggable key={todo} draggableId={todo} index={index}>
                     {(magic) => (
                       <Card
                         ref={magic.innerRef}
