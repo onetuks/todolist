@@ -71,20 +71,32 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  
   const [minutes, setMinutes] = useRecoilState(minuteState);
-  const hours = useRecoilValue(hourSelector);
+  const [hours, setHours] = useRecoilState(hourSelector);
   const onMinChange = (event: React.FormEvent<HTMLInputElement>) => {
     setMinutes(+event.currentTarget.value);
-  }
+  };
+  const onHourChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setHours(+event.currentTarget.value);
+  };
 
   return (
     <>
       <GlobalStyle />
       <TodoList />
       <div>
-          <input value={minutes} onChange={onMinChange} placeholder="Minutes" type="number" />
-          <input value={hours} type="number" placeholder="Hours" />
+        <input
+          value={minutes}
+          onChange={onMinChange}
+          placeholder="Minutes"
+          type="number"
+        />
+        <input
+          onChange={onHourChange}
+          value={hours}
+          type="number"
+          placeholder="Hours"
+        />
       </div>
     </>
   );
