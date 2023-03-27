@@ -9,12 +9,12 @@ const Card = styled.div`
   background-color: ${(props) => props.theme.cardColor};
 `;
 
-interface IProps {
+interface IDraggableCardProps {
   todo: string;
   index: number;
 }
 
-function DraggabbleCard({ todo, index }: IProps) {
+function DraggabbleCard({ todo, index }: IDraggableCardProps) {
   console.log(todo, "has been rendered.");
   return (
     <Draggable draggableId={todo} index={index}>
