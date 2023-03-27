@@ -68,9 +68,6 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
-  button {
-    background-color: ${(props) => props.theme.btnColor};
-  }
 `;
 
 const root = ReactDOM.createRoot(
