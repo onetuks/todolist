@@ -2,6 +2,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautif
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { todoState } from "./Atom";
+import DraggabbleCard from "./components/DraggabbleCard";
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,13 +28,6 @@ const Board = styled.div`
   min-height: 200px;
 `;
 
-const Card = styled.div`
-  border-radius: 5px;
-  margin-bottom: 5px;
-  padding: 10px 10px;
-  background-color: ${(props) => props.theme.cardColor};
-`;
-
 function App() {
   const [todos, setTodos] = useRecoilState(todoState);
   
@@ -56,17 +50,7 @@ function App() {
             {(magic) => (
               <Board ref={magic.innerRef} {...magic.droppableProps}>
                 {todos.map((todo, index) => (
-                  <Draggable key={todo} draggableId={todo} index={index}>
-                    {(magic) => (
-                      <Card
-                        ref={magic.innerRef}
-                        {...magic.draggableProps}
-                        {...magic.dragHandleProps}
-                      >
-                        {todo}
-                      </Card>
-                    )}
-                  </Draggable>
+                  <DraggabbleCard key={todo} todo={todo} index={index} />
                 ))}
                 {magic.placeholder}
               </Board>
