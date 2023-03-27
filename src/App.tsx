@@ -27,17 +27,32 @@ const Boards = styled.div`
 function App() {
   const [todos, setTodos] = useRecoilState(todoState);
 
-  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
-    // setTodos((oldTodos) => {
-    //   // React랑 웹은 Immutable을 지향함.
-    //   // 원본을 변형시켜선 안 됨.
-    //   const todosCopy = [...oldTodos];
-    //   if (destination?.index !== undefined) {
-    //     todosCopy.splice(source.index, 1);
-    //     todosCopy.splice(destination!.index, 0, draggableId);
-    //   }
-    //   return todosCopy;
-    // });
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const {destination, draggableId, source} = info;
+
+    // 드래그 예외처리
+    if (destination === null) {
+      console.log("return");
+      return;
+    }
+
+    // #7.9 Same Board Movement
+    if (destination?.droppableId === source.droppableId) {
+      setTodos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]]
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination?.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: boardCopy,
+        }
+      })
+    } 
+    // #
+    else {
+
+    }
   };
 
   return (
