@@ -1,5 +1,6 @@
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
 import { createGlobalStyle } from "styled-components";
+import { hourSelector, minuteState } from "./Atom";
 import TodoList from "./components/TodoList";
 
 const GlobalStyle = createGlobalStyle`
@@ -70,12 +71,21 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  
+  const [minutes, setMinutes] = useRecoilState(minuteState);
+  const hours = useRecoilValue(hourSelector);
+  const onMinChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setMinutes(+event.currentTarget.value);
+  }
+
   return (
     <>
       <GlobalStyle />
-      <RecoilRoot>
-        <TodoList />
-      </RecoilRoot>
+      <TodoList />
+      <div>
+          <input value={minutes} onChange={onMinChange} placeholder="Minutes" type="number" />
+          <input value={hours} type="number" placeholder="Hours" />
+      </div>
     </>
   );
 }
