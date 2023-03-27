@@ -18,24 +18,30 @@ const Title = styled.h2`
 `;
 
 interface IBoardProps {
-    todos: string[], 
-    droppableId: string,
+  todos: string[];
+  droppableId: string;
 }
 
-function Board({todos, droppableId}: IBoardProps) {
-    return (
-        <Droppable droppableId={droppableId}>
-            {(magic) => (
-              <Wrapper ref={magic.innerRef} {...magic.droppableProps}>
-                <Title>{droppableId}</Title>
-                {todos.map((todo, index) => (
-                  <DraggabbleCard key={todo} todo={todo} index={index} />
-                ))}
-                {magic.placeholder}
-              </Wrapper>
-            )}
-          </Droppable>
-    );
+function Board({ todos, droppableId }: IBoardProps) {
+  return (
+    <Wrapper>
+      <Title>{droppableId}</Title>
+      <Droppable droppableId={droppableId}>
+        {(magic) => (
+          <div
+            style={{ backgroundColor: "red" }}
+            ref={magic.innerRef}
+            {...magic.droppableProps}
+          >
+            {todos.map((todo, index) => (
+              <DraggabbleCard key={todo} todo={todo} index={index} />
+            ))}
+            {magic.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </Wrapper>
+  );
 }
 
 export default Board;

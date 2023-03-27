@@ -32,27 +32,28 @@ function App() {
     const {destination, draggableId, source} = info;
 
     // 드래그 예외처리
-    if (destination === null) {
-      console.log("return");
-      return;
-    }
+    if (!destination) return;
 
-    // #7.9 Same Board Movement
-    if (destination?.droppableId === source.droppableId) {
-      setTodos((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]]
-        boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination?.index, 0, draggableId);
+    // #7.10 Cross Board Movement
+    setTodos((allBoards) => {
+      const sourceBoardCopy = [...allBoards[source.droppableId]];
+      sourceBoardCopy.splice(source.index, 1);
+      if (destination?.droppableId === source.droppableId) {
+        sourceBoardCopy.splice(destination.index, 0, draggableId);
         return {
           ...allBoards,
-          [source.droppableId]: boardCopy,
+          [source.droppableId]: sourceBoardCopy,
         }
-      })
-    } 
-    // #
-    else {
-
-    }
+      } else {
+        const destBoardCopy = [...allBoards[destination!.droppableId]];
+        destBoardCopy.splice(destination!.index, 0, draggableId);
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoardCopy,
+          [destination!.droppableId]: destBoardCopy,
+        }
+      }
+    })
   };
 
   return (
