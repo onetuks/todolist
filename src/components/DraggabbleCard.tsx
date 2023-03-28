@@ -17,14 +17,15 @@ interface ICardProps {
 }
 
 interface IDraggableCardProps {
-  todo: string;
+  todoId: number;
+  todoText: string;
   index: number;
 }
 
-function DraggabbleCard({ todo, index }: IDraggableCardProps) {
+function DraggabbleCard({ todoId, todoText, index }: IDraggableCardProps) {
   // console.log(todo, "has been rendered.");
   return (
-    <Draggable draggableId={todo} index={index}>
+    <Draggable draggableId={todoId + ""} index={index}>
       {(magic, snapshot) => (
         <Card
           isDragging={snapshot.isDragging}
@@ -32,7 +33,7 @@ function DraggabbleCard({ todo, index }: IDraggableCardProps) {
           {...magic.draggableProps}
           {...magic.dragHandleProps}
         >
-          {todo}
+          {todoText}
         </Card>
       )}
     </Draggable>

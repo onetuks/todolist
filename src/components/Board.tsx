@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { ITodo } from "../Atom";
 import DraggabbleCard from "./DraggabbleCard";
 
 const Wrapper = styled.div`
@@ -33,30 +35,44 @@ const Area = styled.div<IAreaProps>`
   padding: 20px;
 `;
 
+const Form = styled.form`
+  width: 100%;
+  input {
+    width: 100%;
+  }
+`;
+
 interface IAreaProps {
   isDraggingOver: boolean;
   isDraggingFromThis: boolean;
 }
 
 interface IBoardProps {
-  todos: string[];
-  droppableId: string;
+  todos: ITodo[];
+  boardId: string;
 }
 
-function Board({ todos, droppableId }: IBoardProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const onClick = () => {
-    inputRef.current?.focus();
-    setTimeout(() => {
-      inputRef.current?.blur();
-    }, 5000);
+interface IForm {
+  todo: string;
+}
+
+function Board({ todos, boardId }: IBoardProps) {
+  const { register, handleSubmit, setValue } = useForm<IForm>(); 
+  const onValid = ({todo} : IForm) => {
+    setValue("todo", "");
   };
+
   return (
     <Wrapper>
-      <Title>{droppableId}</Title>
-      <input ref={inputRef} placeholder="grab me"/>
-      <button onClick={onClick}>click me</button>
-      <Droppable droppableId={droppableId}>
+      <Title>{boardId}</Title>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input
+          {...register("todo", { required: true })}
+          type="text"
+          placeholder={`Add task on ${boardId}`}
+        />
+      </Form>
+      <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area
             isDraggingOver={snapshot.isDraggingOver}
@@ -65,7 +81,7 @@ function Board({ todos, droppableId }: IBoardProps) {
             {...provided.droppableProps}
           >
             {todos.map((todo, index) => (
-              <DraggabbleCard key={todo} todo={todo} index={index} />
+              <DraggabbleCard key={todo.id} todoId={todo.id} todoText={todo.text} index={index} />
             ))}
             {provided.placeholder}
           </Area>
