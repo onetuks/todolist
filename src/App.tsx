@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  max-width: 540px;
+  max-width: 680px;
   height: 100vh;
   width: 100%;
 `;
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 const Boards = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
 
