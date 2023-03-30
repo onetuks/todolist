@@ -1,6 +1,6 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
-interface ITodoState {
+export interface ITodoState {
     [key: string] : ITodo[],
 }
 
@@ -19,3 +19,8 @@ export const todoState = atom<ITodoState>({
         TRASH: [],
     },
 });
+
+export const boardState = atom<string[]>({
+    key: "boards",
+    default: ["TODO", "DOING", "DONE", "DOLATER", "TRASH"]
+})

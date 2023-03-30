@@ -1,9 +1,10 @@
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { todoState } from "./Atom";
+import { boardState, todoState } from "./Atom";
 import Board from "./components/Board";
 import Trash from "./components/Trash";
+import { onDragEnd } from "./utils/move";
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,65 +13,47 @@ const Wrapper = styled.div`
   align-items: center;
   max-width: 680px;
   height: 100vh;
-  width: 100%;
-  background-color: white;
+  width: 100vw;
+  position: relative;
 `;
 
 const Boards = styled.div`
-  display: grid;
+  display: flex;
   width: 100%;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 `;
+// const Boards = styled.div`
+// display: flex;
+// justify-content: center;
+// align-items: flex-center;
+// width: 100%
+// `;
 
 function App() {
   const [todos, setTodos] = useRecoilState(todoState);
-
-  const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, draggableId, source } = info;
-
-    // 드래그 예외처리
-    if (!destination) return;
-
-    // #7.10 Cross Board Movement
-    setTodos((allBoards) => {
-      const sourceBoardCopy = [...allBoards[source.droppableId]];
-      const taskObj = sourceBoardCopy[source.index];
-      sourceBoardCopy.splice(source.index, 1);
-
-      if (destination?.droppableId === source.droppableId) {
-        // 내수용
-        sourceBoardCopy.splice(destination.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: sourceBoardCopy,
-        };
-      } else {
-        // 수출용
-        console.log(allBoards[destination!.droppableId]);
-        const destBoardCopy = [...allBoards[destination!.droppableId]];
-        if (destination!.droppableId !== "TRASH")
-          destBoardCopy.splice(destination!.index, 0, taskObj);
-        return {
-          ...allBoards,
-          [source.droppableId]: sourceBoardCopy,
-          [destination!.droppableId]: destBoardCopy,
-        };
-      }
-    });
-  };
+  const [boards, setBoards] = useRecoilState(boardState);
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={(info) => onDragEnd(info, setTodos, setBoards)}>
       <Wrapper>
-        <Boards>
-          {Object.keys(todos).map((boardId) =>
-            boardId !== "TRASH" ? (
-              <Board key={boardId} todos={todos[boardId]} boardId={boardId} />
-            ) : null
+        <Droppable droppableId="BOARDS">
+          {(provided, snapshot) => (
+            <Boards ref={provided.innerRef} {...provided.droppableProps}>
+              {boards.map((boardId, boardIdx) =>
+                boardId !== "TRASH" ? (
+                  <Board
+                    key={boardId}
+                    todos={todos[boardId]}
+                    boardId={boardId}
+                    boardIdx={boardIdx}
+                  />
+                ) : null
+              )}
+              {provided.placeholder}
+            </Boards>
           )}
-        </Boards>
+        </Droppable>
       </Wrapper>
       <Trash />
     </DragDropContext>
