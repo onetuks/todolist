@@ -1,11 +1,9 @@
-import {
-  DragDropContext,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { todoState } from "./Atom";
 import Board from "./components/Board";
+import Trash from "./components/Trash";
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,6 +13,7 @@ const Wrapper = styled.div`
   max-width: 680px;
   height: 100vh;
   width: 100%;
+  background-color: white;
 `;
 
 const Boards = styled.div`
@@ -29,7 +28,7 @@ function App() {
 
   const onDragEnd = (info: DropResult) => {
     console.log(info);
-    const {destination, draggableId, source} = info;
+    const { destination, draggableId, source } = info;
 
     // 드래그 예외처리
     if (!destination) return;
@@ -37,37 +36,43 @@ function App() {
     // #7.10 Cross Board Movement
     setTodos((allBoards) => {
       const sourceBoardCopy = [...allBoards[source.droppableId]];
-      const taskObj = sourceBoardCopy[source.index]
+      const taskObj = sourceBoardCopy[source.index];
       sourceBoardCopy.splice(source.index, 1);
 
-      if (destination?.droppableId === source.droppableId) { // 내수용
+      if (destination?.droppableId === source.droppableId) {
+        // 내수용
         sourceBoardCopy.splice(destination.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
-        }
-      } else { // 수출용
+        };
+      } else {
+        // 수출용
+        console.log(allBoards[destination!.droppableId]);
         const destBoardCopy = [...allBoards[destination!.droppableId]];
-        destBoardCopy.splice(destination!.index, 0, taskObj);
+        if (destination!.droppableId !== "TRASH")
+          destBoardCopy.splice(destination!.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
           [destination!.droppableId]: destBoardCopy,
-        }
+        };
       }
-
-    })
+    });
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
         <Boards>
-          {Object.keys(todos).map((boardId) => (
-            <Board key={boardId} todos={todos[boardId]} boardId={boardId}/>
-          ))}
+          {Object.keys(todos).map((boardId) =>
+            boardId !== "TRASH" ? (
+              <Board key={boardId} todos={todos[boardId]} boardId={boardId} />
+            ) : null
+          )}
         </Boards>
       </Wrapper>
+      <Trash />
     </DragDropContext>
   );
 }

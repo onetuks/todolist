@@ -12,9 +12,10 @@ export interface ITodo {
 export const todoState = atom<ITodoState>({
     key: "todo",
     default: {
-        TODO: [{id: 1, text:"hoe"}, {id: 2, text:"hwa"}],
+        TODO: [],
         DOING: [],
         DONE: [],
         DOLATER: [],
+        TRASH: [],
     },
 });
