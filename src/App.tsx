@@ -37,22 +37,25 @@ function App() {
     // #7.10 Cross Board Movement
     setTodos((allBoards) => {
       const sourceBoardCopy = [...allBoards[source.droppableId]];
+      const taskObj = sourceBoardCopy[source.index]
       sourceBoardCopy.splice(source.index, 1);
-      if (destination?.droppableId === source.droppableId) {
-        sourceBoardCopy.splice(destination.index, 0, draggableId);
+
+      if (destination?.droppableId === source.droppableId) { // 내수용
+        sourceBoardCopy.splice(destination.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
         }
-      } else {
+      } else { // 수출용
         const destBoardCopy = [...allBoards[destination!.droppableId]];
-        destBoardCopy.splice(destination!.index, 0, draggableId);
+        destBoardCopy.splice(destination!.index, 0, taskObj);
         return {
           ...allBoards,
           [source.droppableId]: sourceBoardCopy,
           [destination!.droppableId]: destBoardCopy,
         }
       }
+
     })
   };
 
@@ -61,7 +64,7 @@ function App() {
       <Wrapper>
         <Boards>
           {Object.keys(todos).map((boardId) => (
-            <Board key={boardId} todos={todos[boardId]} droppableId={boardId}/>
+            <Board key={boardId} todos={todos[boardId]} boardId={boardId}/>
           ))}
         </Boards>
       </Wrapper>
